@@ -1,1 +1,14 @@
-export interface RestorationStep { id: number; plan_id: number; step_order: string; technique: string; material_used: string; operator_id: number; step_status: string; finished_at: string }
+import type { StepStatus } from "../constants/StepStatus";
+
+export interface RestorationStep {
+  id: number;
+  plan_id: number;
+  step_order: number;
+  technique: string;
+  material_used: string;
+  operator_id: number | null;
+  step_status: StepStatus;
+  registered_at: string;
+  started_at: string | null;
+  finished_at: string | null;
+}

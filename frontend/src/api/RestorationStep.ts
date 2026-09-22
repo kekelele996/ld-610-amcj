@@ -1,21 +1,31 @@
-import { mockData } from "../mocks/seedData";
+import { http } from "./http";
 import type { RestorationStep } from "../types/RestorationStep";
 
 const endpoint = "/api/restoration-step";
 
 export async function listRestorationStep(): Promise<RestorationStep[]> {
-  if (typeof fetch !== "undefined" && endpoint.startsWith("/api") && true) {
-    try {
-      const res = await fetch(endpoint);
-      if (res.ok) return await res.json();
-    } catch {
-      // Local mock fallback keeps the UI available during offline review.
-    }
-  }
-  return [...(mockData.restorationStep as unknown as RestorationStep[])];
+  return http<RestorationStep[]>(endpoint);
 }
 
-export async function saveRestorationStep(payload: RestorationStep) {
-  console.info("save RestorationStep", payload);
-  return payload;
+/** 登记步骤：方案未 APPROVED 时后端返回 STEP_REGISTER_LOCKED */
+export async function registerRestorationStep(payload: {
+  plan_id: number;
+  technique: string;
+  material_used?: string;
+}): Promise<RestorationStep> {
+  return http<RestorationStep>(endpoint, { method: "POST", body: JSON.stringify(payload) });
+}
+
+export async function startRestorationStep(id: number): Promise<RestorationStep> {
+  return http<RestorationStep>(`${endpoint}/${id}/start`, { method: "POST" });
+}
+
+export async function completeRestorationStep(
+  id: number,
+  material_used?: string
+): Promise<RestorationStep> {
+  return http<RestorationStep>(`${endpoint}/${id}/complete`, {
+    method: "POST",
+    body: JSON.stringify({ material_used })
+  });
 }

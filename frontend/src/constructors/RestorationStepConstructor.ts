@@ -1,14 +1,17 @@
 import type { RestorationStep } from "../types/RestorationStep";
 
+/** 新登记步骤默认 PENDING；step_order 由后端按方案内顺序自动分配 */
 export const createDefaultRestorationStep = (overrides: Partial<RestorationStep> = {}): RestorationStep => ({
-  id: 1 as never,
-  plan_id: 1 as never,
-  step_order: "step order 1" as never,
-  technique: "technique 1" as never,
-  material_used: "material used 1" as never,
-  operator_id: 1 as never,
-  step_status: "SUBMITTED" as never,
-  finished_at: "2026-06-11T09:00:00Z" as never,
+  id: 0,
+  plan_id: 0,
+  step_order: 0,
+  technique: "",
+  material_used: "",
+  operator_id: null,
+  step_status: "PENDING",
+  registered_at: new Date(0).toISOString(),
+  started_at: null,
+  finished_at: null,
   ...overrides
 });
 

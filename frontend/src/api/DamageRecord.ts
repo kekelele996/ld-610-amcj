@@ -1,21 +1,12 @@
-import { mockData } from "../mocks/seedData";
+import { http } from "./http";
 import type { DamageRecord } from "../types/DamageRecord";
 
 const endpoint = "/api/damage-record";
 
 export async function listDamageRecord(): Promise<DamageRecord[]> {
-  if (typeof fetch !== "undefined" && endpoint.startsWith("/api") && true) {
-    try {
-      const res = await fetch(endpoint);
-      if (res.ok) return await res.json();
-    } catch {
-      // Local mock fallback keeps the UI available during offline review.
-    }
-  }
-  return [...(mockData.damageRecord as unknown as DamageRecord[])];
+  return http<DamageRecord[]>(endpoint);
 }
 
-export async function saveDamageRecord(payload: DamageRecord) {
-  console.info("save DamageRecord", payload);
-  return payload;
+export async function saveDamageRecord(payload: Partial<DamageRecord> & { relic_id: number; damage_type: string }) {
+  return http<DamageRecord>(endpoint, { method: "POST", body: JSON.stringify(payload) });
 }

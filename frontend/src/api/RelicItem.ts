@@ -1,21 +1,18 @@
-import { mockData } from "../mocks/seedData";
+import { http } from "./http";
 import type { RelicItem } from "../types/RelicItem";
+import type { RelicArchive } from "../types/RelicArchive";
 
 const endpoint = "/api/relic-item";
 
 export async function listRelicItem(): Promise<RelicItem[]> {
-  if (typeof fetch !== "undefined" && endpoint.startsWith("/api") && true) {
-    try {
-      const res = await fetch(endpoint);
-      if (res.ok) return await res.json();
-    } catch {
-      // Local mock fallback keeps the UI available during offline review.
-    }
-  }
-  return [...(mockData.relicItem as unknown as RelicItem[])];
+  return http<RelicItem[]>(endpoint);
 }
 
-export async function saveRelicItem(payload: RelicItem) {
-  console.info("save RelicItem", payload);
-  return payload;
+/** 文物档案：含每个方案的审批状态、退回原因与步骤进度 */
+export async function listRelicArchives(): Promise<RelicArchive[]> {
+  return http<RelicArchive[]>(`${endpoint}/archives`);
+}
+
+export async function getRelicArchive(id: number): Promise<RelicArchive> {
+  return http<RelicArchive>(`${endpoint}/${id}/archive`);
 }
