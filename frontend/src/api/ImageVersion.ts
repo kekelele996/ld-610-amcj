@@ -1,18 +1,15 @@
 import { mockData } from "../mocks/seedData";
+import { request } from "./client";
 import type { ImageVersion } from "../types/ImageVersion";
 
 const endpoint = "/api/image-version";
 
 export async function listImageVersion(): Promise<ImageVersion[]> {
-  if (typeof fetch !== "undefined" && endpoint.startsWith("/api") && true) {
-    try {
-      const res = await fetch(endpoint);
-      if (res.ok) return await res.json();
-    } catch {
-      // Local mock fallback keeps the UI available during offline review.
-    }
+  try {
+    return await request<ImageVersion[]>(endpoint);
+  } catch {
+    return [...(mockData.imageVersion as unknown as ImageVersion[])];
   }
-  return [...(mockData.imageVersion as unknown as ImageVersion[])];
 }
 
 export async function saveImageVersion(payload: ImageVersion) {

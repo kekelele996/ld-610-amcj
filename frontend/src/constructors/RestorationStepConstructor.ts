@@ -1,14 +1,19 @@
 import type { RestorationStep } from "../types/RestorationStep";
 
 export const createDefaultRestorationStep = (overrides: Partial<RestorationStep> = {}): RestorationStep => ({
-  id: 1 as never,
-  plan_id: 1 as never,
-  step_order: "step order 1" as never,
-  technique: "technique 1" as never,
-  material_used: "material used 1" as never,
-  operator_id: 1 as never,
-  step_status: "SUBMITTED" as never,
-  finished_at: "2026-06-11T09:00:00Z" as never,
+  id: 0,
+  plan_id: 0,
+  step_order: 1,
+  technique: "",
+  material_used: "",
+  operator_id: 0,
+  operator_name: "",
+  step_status: "PENDING",
+  started_at: null,
+  finished_at: null,
+  quality_note: "",
+  created_at: "",
+  updated_at: "",
   ...overrides
 });
 

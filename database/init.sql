@@ -29,19 +29,45 @@ CREATE TABLE IF NOT EXISTS restoration_plan (
   method TEXT,
   risk_assessment TEXT,
   approval_status TEXT,
-  owner_id TEXT
+  owner_id TEXT,
+  owner_name TEXT,
+  submitted_at TEXT,
+  approved_at TEXT,
+  rejected_at TEXT,
+  archived_at TEXT,
+  rejection_reason TEXT,
+  updated_at TEXT
 );
+
+-- 审批轨迹：送审 / 通过 / 退回（含退回原因）/ 归档，构成可追溯审批链
+CREATE TABLE IF NOT EXISTS plan_approval_record (
+  id INTEGER PRIMARY KEY,
+  plan_id INTEGER NOT NULL REFERENCES restoration_plan(id),
+  action TEXT NOT NULL,
+  actor_id INTEGER,
+  actor_name TEXT,
+  actor_role TEXT,
+  comment TEXT,
+  created_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_plan_approval_record_plan ON plan_approval_record(plan_id);
 
 CREATE TABLE IF NOT EXISTS restoration_step (
   id INTEGER PRIMARY KEY,
   plan_id TEXT,
-  step_order TEXT,
+  step_order INTEGER,
   technique TEXT,
   material_used TEXT,
   operator_id TEXT,
+  operator_name TEXT,
   step_status TEXT,
-  finished_at TEXT
+  started_at TEXT,
+  finished_at TEXT,
+  quality_note TEXT,
+  created_at TEXT,
+  updated_at TEXT
 );
+CREATE INDEX IF NOT EXISTS idx_restoration_step_plan ON restoration_step(plan_id);
 
 CREATE TABLE IF NOT EXISTS image_version (
   id INTEGER PRIMARY KEY,
@@ -57,8 +83,13 @@ CREATE TABLE IF NOT EXISTS image_version (
 CREATE TABLE IF NOT EXISTS audit_log (
   id INTEGER PRIMARY KEY,
   actor TEXT,
+  actor_id INTEGER,
+  actor_name TEXT,
+  actor_role TEXT,
   action TEXT,
   target_type TEXT,
   target_id TEXT,
+  message TEXT,
   created_at TEXT
 );
+CREATE INDEX IF NOT EXISTS idx_audit_log_target ON audit_log(target_type, target_id);
